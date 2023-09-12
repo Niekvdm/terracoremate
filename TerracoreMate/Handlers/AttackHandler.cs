@@ -149,7 +149,7 @@ public class AttackHandler : IHandler
                 transactionId
             );
 
-            var transactionLog = await ValidateTransactionByTarget(transactionId, target.Username);
+            var transactionLog = await ValidateTransactionByTarget(transactionId, target.Username, 5);
 
             if (transactionLog == null)
             {

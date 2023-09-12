@@ -87,7 +87,7 @@ public class ClaimHandler : IHandler
             transactionId
         );
 
-        var transactionLog = await ValidateTransaction();
+        var transactionLog = await ValidateTransaction(5);
 
         if (transactionLog == null)
         {
@@ -160,7 +160,7 @@ public class ClaimHandler : IHandler
 
             var log = logs.FirstOrDefault(log =>
                 log.Username.Equals(_account.Username, StringComparison.InvariantCultureIgnoreCase) &&
-                log.HasOccuredWithinSeconds(60 * 2)
+                log.HasOccuredWithinSeconds(60 * 5)
             );
 
             if (log != null)
