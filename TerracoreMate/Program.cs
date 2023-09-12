@@ -16,11 +16,6 @@ builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 builder.Services.AddTerracoreMate();
 
-builder.Services.AddControllers();
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 builder.Services.AddHostedService<MainService>();
 
 var app = builder.Build();
