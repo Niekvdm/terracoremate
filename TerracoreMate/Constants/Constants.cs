@@ -32,5 +32,9 @@ public static class Constants
     {
         public const int RegistrationProtectionTime = 86400000; // 24h
         public const int LastBattleProtectionTime = 60000; // 1m
+
+        // Example seed: "04ab389f26f45d26cf56b06c6eb4bf8bd69cfeb6@9c5bb620a425bc81a26f8b558e079e9bae58b918@1694487145129"
+        // Seed will be split on '@' and the index below will be used to acquire the correct part of the string
+        public const int SeedTransactionIdIndex = 1;
     }
 }
