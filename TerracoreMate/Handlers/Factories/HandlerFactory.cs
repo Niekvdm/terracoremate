@@ -12,6 +12,13 @@ public interface IHandlerFactory
     /// <typeparam name="T">The type of the handler to be created, must implement IHandler.</typeparam>
     /// <returns>An instance of a handler.</returns>
     IHandler CreateHandler<T>(Account account);
+
+    /// <summary>
+    /// Attempts to fetch the requested service from the DI container
+    /// </summary>
+    /// <typeparam name="T">The type of service to be returned</typeparam>
+    /// <returns>An instance of a service</returns>
+    T GetService<T>();
 }
 
 public class HandlerFactory : IHandlerFactory
@@ -39,5 +46,15 @@ public class HandlerFactory : IHandlerFactory
         handler.SetAccount(account);
 
         return handler;
+    }
+
+    /// <summary>
+    /// Attempts to fetch the requested service from the DI container
+    /// </summary>
+    /// <typeparam name="T">The type of service to be returned</typeparam>
+    /// <returns>An instance of a service</returns>
+    public T GetService<T>()
+    {
+        return (T)_serviceProvider.GetRequiredService(typeof(T));
     }
 }
