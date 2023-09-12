@@ -103,7 +103,7 @@ public class InstanceManager
             var transactionService = _handlerFactory.GetService<TransactionService>();
             var queue = await transactionService.GetTransactionQueue();
 
-            if (queue.Transactions < 25)
+            if (queue.Transactions < Constants.Terracore.QueueThreshold)
                 return true;
             
             _logger.Warning("Terracore transaction queue is currently overloaded: {Queue}, waiting for the queue to subside", queue.Transactions);
