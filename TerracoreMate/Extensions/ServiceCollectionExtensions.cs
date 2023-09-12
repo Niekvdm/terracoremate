@@ -30,6 +30,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<HiveHttpMessageHandler>();
 
         services.AddSingleton<PlayerService>();
+        services.AddSingleton<TransactionService>();
         services.AddSingleton<HiveService>();
 
         services.AddSingleton<IHandlerFactory, HandlerFactory>();

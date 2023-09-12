@@ -3,6 +3,7 @@ using TerracoreMate.Handlers;
 using TerracoreMate.Handlers.Factories;
 using TerracoreMate.Handlers.Interfaces;
 using TerracoreMate.Models;
+using TerracoreMate.Services;
 
 namespace TerracoreMate.Managers;
 
@@ -24,7 +25,11 @@ public class InstanceManager
     /// <param name="accounts">The accounts to manage.</param>
     /// <param name="handlerFactory">The factory to produce handlers.</param>
     /// <param name="logger">Logger used for logging events and exceptions.</param>
-    public InstanceManager(IEnumerable<Account> accounts, IHandlerFactory handlerFactory, ILogger logger)
+    public InstanceManager(
+        IEnumerable<Account> accounts,
+        IHandlerFactory handlerFactory,
+        ILogger logger
+    )
     {
         _accounts = accounts;
         _handlerFactory = handlerFactory;
@@ -58,10 +63,10 @@ public class InstanceManager
             await HandleAccountActions();
             await Task.Delay(Constants.Application.DefaultTaskDelay, cancellationToken);
         }
-        
+
         _logger.Warning("Execution has finished");
     }
-    
+
     /// <summary>
     /// Handle account actions.
     ///</summary>
@@ -72,6 +77,12 @@ public class InstanceManager
             if (!VerifyLastAccountActivity(account))
                 continue;
 
+            if (!await CheckTransactionQueue())
+            {
+                UpdateLastActivity(account.Username);
+                continue;
+            }
+
             await HandleAccountAction<AttackHandler>(account);
             await HandleAccountAction<ClaimHandler>(account);
             await HandleAccountAction<UpgradeHandler>(account);
@@ -80,7 +91,31 @@ public class InstanceManager
             UpdateLastActivity(account.Username);
         }
     }
-    
+
+    /// <summary>
+    /// Check the Terracore transaction queue
+    /// </summary>
+    /// <returns>true / false depending on the queue size</returns>
+    private async Task<bool> CheckTransactionQueue()
+    {
+        try
+        {
+            var transactionService = _handlerFactory.GetService<TransactionService>();
+            var queue = await transactionService.GetTransactionQueue();
+
+            if (queue.Transactions < 25)
+                return true;
+            
+            _logger.Warning("Terracore transaction queue is currently overloaded: {Queue}, waiting for the queue to subside", queue.Transactions);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "An exception occured while checking the Terracore transaction queue, {Message}", ex.Message);
+        }
+
+        return false;
+    }
+
     /// <summary>
     /// Factory method for managing account action
     /// </summary>
