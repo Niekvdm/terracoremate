@@ -153,8 +153,11 @@ public class UpgradeHandler : IHandler
     /// </summary>
     /// <param name="stats">The stats that are to be validated</param>
     /// <param name="maxAttempts">The maximum number of validation attempts</param>
-    private async Task<PlayerStats?> ValidateTransaction(PlayerStats stats, UpgradeType upgradeType,
-        int maxAttempts = 3)
+    private async Task<PlayerStats?> ValidateTransaction(
+        PlayerStats stats,
+        UpgradeType upgradeType,
+        int maxAttempts = Constants.Application.UpgradeTransactionValidationAttempts
+    )
     {
         for (var i = 0; i < maxAttempts; i++)
         {

@@ -6,6 +6,11 @@ public static class Constants
     {
         public const int ActivityTimeInterval = 1000 * 30; // 30s
         public const int DefaultTaskDelay = 5000; // 5s
+
+        public const int BattleTransactionValidationAttempts = 5;
+        public const int BossTransactionValidationAttempts = 5;
+        public const int ClaimTransactionValidationAttempts = 5;
+        public const int UpgradeTransactionValidationAttempts = 5;
     }
 
     public static class TransactionIds

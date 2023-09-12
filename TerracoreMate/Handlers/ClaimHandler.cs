@@ -12,7 +12,7 @@ public class ClaimHandler : IHandler
     private readonly HiveService _hiveService;
     private readonly PlayerService _playerService;
     private readonly ILogger _logger;
-    
+
     private Account _account;
 
     /// <summary>
@@ -31,7 +31,7 @@ public class ClaimHandler : IHandler
         _playerService = playerService;
         _logger = logger;
     }
-    
+
     /// <summary>
     /// Sets the class-level account to the provided account.
     /// </summary>
@@ -72,7 +72,7 @@ public class ClaimHandler : IHandler
     {
         if (!player.Scrap.HasValue || player.Scrap == 0)
             return;
-        
+
         _logger.Information("{Username}> is claiming {Quantity} {Type}",
             _account.Username,
             Math.Round(player.Scrap ?? 0, 4),
@@ -87,7 +87,7 @@ public class ClaimHandler : IHandler
             transactionId
         );
 
-        var transactionLog = await ValidateTransaction(5);
+        var transactionLog = await ValidateTransaction();
 
         if (transactionLog == null)
         {
@@ -152,7 +152,9 @@ public class ClaimHandler : IHandler
     /// </summary>
     /// <param name="maxAttempts">The maximum number of attempts to validate the transaction.</param>
     /// <returns>The task instance representing the asynchronous operation, containing the claim log if the transaction is valid, null otherwise.</returns>
-    private async Task<ClaimLog?> ValidateTransaction(int maxAttempts = 3)
+    private async Task<ClaimLog?> ValidateTransaction(
+        int maxAttempts = Constants.Application.ClaimTransactionValidationAttempts
+    )
     {
         for (var i = 0; i < maxAttempts; i++)
         {

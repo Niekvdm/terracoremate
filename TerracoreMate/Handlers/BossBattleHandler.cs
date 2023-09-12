@@ -157,7 +157,10 @@ public class BossBattleHandler : IHandler
     /// </summary>
     /// <param name="maxAttempts">The maximum number of attempts to validate the transaction.</param>
     /// <returns>The task instance representing the asynchronous operation, containing the claim log if the transaction is valid, null otherwise.</returns>
-    private async Task<BossLog> ValidateTransaction(Planet planet, int maxAttempts = 3)
+    private async Task<BossLog> ValidateTransaction(
+        Planet planet,
+        int maxAttempts = Constants.Application.BossTransactionValidationAttempts
+    )
     {
         for (var i = 0; i < maxAttempts; i++)
         {

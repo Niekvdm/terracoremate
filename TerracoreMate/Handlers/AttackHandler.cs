@@ -12,7 +12,7 @@ public class AttackHandler : IHandler
     private readonly HiveService _hiveService;
     private readonly PlayerService _playerService;
     private readonly ILogger _logger;
-    
+
     private Account _account;
 
     /// <summary>
@@ -31,7 +31,7 @@ public class AttackHandler : IHandler
         _playerService = playerService;
         _logger = logger;
     }
-    
+
     /// <summary>
     /// Sets the class-level account to the provided account.
     /// </summary>
@@ -149,7 +149,7 @@ public class AttackHandler : IHandler
                 transactionId
             );
 
-            var transactionLog = await ValidateTransactionByTarget(transactionId, target.Username, 5);
+            var transactionLog = await ValidateTransactionByTarget(transactionId, target.Username);
 
             if (transactionLog == null)
             {
@@ -250,7 +250,11 @@ public class AttackHandler : IHandler
     /// <param name="target">Username of the player who is the target of the transaction.</param>
     /// <param name="maxAttempts">Maximum number of attempts to validate the transaction.</param>
     /// <returns>A Task which result is the battle log of the transaction or null, if validation fails after maxAttempts.</returns>
-    private async Task<BattleLog?> ValidateTransactionByTarget(string transactionId, string target, int maxAttempts = 3)
+    private async Task<BattleLog?> ValidateTransactionByTarget(
+        string transactionId,
+        string target,
+        int maxAttempts = Constants.Application.BattleTransactionValidationAttempts
+    )
     {
         for (var i = 0; i < maxAttempts; i++)
         {
